@@ -1,0 +1,104 @@
+<!-- Imports x-tag -->
+<script src="../../assets/js/libs/x-tag-no-polyfills.js"></script>
+
+<!-- Defines element markup -->
+<style media="screen">
+    xtag-wc-input-with-binding {
+        opacity: 0;
+        transition: all 0.3s ease-in;
+        contain: content;
+    }
+
+    xtag-wc-input-with-binding[enhanced] {
+        opacity: 1;
+    }
+
+    input {
+        padding: 0.8rem 1rem;
+        font-size: 1.2rem;
+        border-radius: 0.2rem;
+        border: 1px solid #a6a6a6;
+        box-shadow: inset 1px 1px 1px rgba(0,0,0, 0.1);
+        min-width: 20rem;
+        transition: all 0.3s ease-in;
+    }
+
+    input:focus {
+        outline: 0;
+        border-color: #006666;
+    }
+
+    h4 {
+        margin: 0 0 0.5rem;
+    }
+</style>
+
+<script type="text/javascript">
+(function(window, document, undefined) {
+    xtag.register('xtag-wc-input-with-binding', {
+        content: function(){/*
+            <h4>
+                <span id="greeting"></span>
+                <span id="user"></span>
+            </h4>
+            <input type="text" name="username" placeholder="Type here to change name" id="userNameInp">
+        */},
+        lifecycle: {
+            created: function() {
+                this.greetingEle = this._findEle('#greeting');
+                this.userEle     = this._findEle('#user');
+
+                // one time binding onload
+                this.greetingEle.textContent = this.getAttribute('greeting') || "Welcome!";
+
+                this.userOrgVal = this.getAttribute('user') || "Mr. X";
+
+                let inputEle = this._findEle('#userNameInp');
+                inputEle.value = this.userOrgVal;
+            },
+
+            inserted: function() {
+                // show component by adding enhanced attribute, only when it's ready
+                this.setAttribute('enhanced', '');
+            },
+
+            removed: function() {},
+
+            attributeChanged: function(attr, oldVal, newVal) {
+                // re-render/update component on attribute changes
+                this._renderComponent();
+            }
+        },
+
+        events: {
+            'input:delegate(#userNameInp)': function (e) {
+                e.currentTarget.setAttribute('user', e.target.value);
+            }
+        },
+
+        accessors: {
+            user: {
+                attribute: {},
+                get: function(){
+                    return this.getAttribute('user');
+                },
+                set: function(value) {
+                    this.xtag.data.user = value;
+                }
+            }
+        },
+
+        methods: {
+            // helper method
+            _findEle: function (selector) {
+                return this.querySelector(selector);
+            },
+
+            // render component with changes
+            _renderComponent: function() {
+                this.userEle.textContent = this.user || this.userOrgVal;
+            }
+        }
+    });
+})(window, document);
+</script>

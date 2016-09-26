@@ -1,0 +1,137 @@
+<template id="wc-input-with-binding">
+    <style media="screen">
+        :host-context(.light) {}
+
+        :host {
+            opacity: 0;
+            transition: all 0.3s ease-in;
+            contain: content;
+        }
+
+        :host([enhanced]) {
+            opacity: 1;
+        }
+
+        input {
+            padding: 0.8rem 1rem;
+            font-size: 1.2rem;
+            border-radius: 0.2rem;
+            border: 1px solid #a6a6a6;
+            box-shadow: inset 1px 1px 1px rgba(0,0,0, 0.1);
+            min-width: 20rem;
+            transition: all 0.3s ease-in;
+        }
+
+        input:focus {
+            outline: 0;
+            border-color: #006666;
+        }
+
+        h4 {
+            margin: 0 0 0.5rem;
+        }
+    </style>
+    <h4>
+        <span id="greeting"></span>
+        <span id="user"></span>
+    </h4>
+    <input type="text" name="username" placeholder="Type here to change name" id="userNameInp">
+</template>
+
+<script type="text/javascript">
+    (function(){
+        const componentDocument = document.currentScript.ownerDocument;
+        const templateEle       = componentDocument.querySelector('template');
+        const markup            = templateEle.content.cloneNode(true);
+        const attrsToObserve    = ['greeting', 'user'];
+
+        class WcInputWithBinding extends HTMLElement {
+            constructor() {
+                super();
+
+                //initialize component and inject markup into shadow dom
+                this._shadowRoot = this.attachShadow({mode: 'open'});
+                this._shadowRoot.appendChild(markup);
+
+                // create props object from attributes
+                this._createPropsFromAttr();
+
+                this.userOrgVal = this.getAttribute('user');
+
+                let inputEle = this._findEle('#userNameInp');
+                inputEle.value = this.userOrgVal;
+
+                inputEle.addEventListener('input', this._inputChanged.bind(this));
+            }
+
+            static get observedAttributes() {
+                return attrsToObserve;
+            }
+
+            attributeChangedCallback(attrName, oldVal, newVal) {
+                this._updatePropsAndBinding(attrName, oldVal, newVal);
+                this._renderComponent();
+            }
+
+            connectedCallback() {
+                this.setAttribute('enhanced', '');
+                this._renderComponent();
+            }
+
+            disconnectedCallback() {
+                console.log('dis connected');
+            }
+
+            get greeting() {
+                return this.props.greeting || "Welcome!";
+            }
+
+            set greeting(value) {
+                this.setAttribute('greeting', value);
+            }
+
+            get user() {
+                return this.props.user;
+            }
+
+            set user(value) {
+                this.setAttribute('user', value);
+            }
+
+            _findEle(selector) {
+                return this._shadowRoot.querySelector(selector);
+            }
+
+            _createPropsFromAttr() {
+                this.props = {};
+
+                attrsToObserve.forEach((ele)=> {
+                    return this.props[ele] = null;
+                });
+            }
+
+            _updatePropsAndBinding(attrName, oldVal, newVal) {
+                let attrIndex = attrsToObserve.indexOf(attrName);
+                let attrVar   = attrsToObserve[attrIndex];
+
+                // skip update if not required
+                if(attrIndex === -1) {
+                    return;
+                }
+
+                this.props[attrVar] = this._findEle('#'+attrVar).textContent = newVal  || this.userOrgVal;
+            }
+
+            _inputChanged (e) {
+                this.user = e.target.value;
+            }
+
+            _renderComponent() {
+                // do other stuff if you need to perform any additional tasks
+            }
+        };
+
+        // publish custom element
+        window.customElements.define('wc-input-with-binding', WcInputWithBinding);
+    }());
+</script>

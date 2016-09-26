@@ -1,0 +1,103 @@
+<template id="wc-button">
+    <style>
+        :host {
+            opacity: 0;
+            transition: all 0.3s ease-in;
+        }
+
+        :host([enhanced]) {
+            opacity: 1;
+        }
+
+        button {
+            padding: 0.8rem 2rem;
+            font-size: 1.4rem;
+            background: #037b6f linear-gradient(to bottom,#7cd2ca,#037b6f);
+            border-color: #669999 #006666 #336666;
+            color: #fff;
+            text-shadow: 1px 1px 1px rgba(0,0,0, 0.3);
+            border-width: 1px;
+            border-style: solid;
+            text-transform: capitalize;
+            cursor: pointer;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.4);
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background: #037b6f;
+        }
+
+        button:focus,
+        button:active {
+            outline: 0;
+            background: #336666;
+            box-shadow: inset 0 0 3px rgba(0,0,0, 0.3);
+        }
+
+        :host([disabled]) button {
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+    </style>
+
+    <button>
+        <slot name="icon"></slot>
+        <slot name="text"></slot>
+    </button>
+    <slot></slot>
+</template>
+
+<script type="text/javascript">
+    const componentDocument = document.currentScript.ownerDocument;
+    const templateEle       = componentDocument.querySelector('template');
+    const markup            = templateEle.content.cloneNode(true);
+
+    class WcButton extends HTMLElement {
+        static get observedAttributes() {
+            return ['disabled', 'iconurl'];
+        }
+
+        constructor() {
+            super();
+
+            //initialize component and inject markup into shadow dom
+            let shadowRoot = this.attachShadow({mode: 'open'});
+            shadowRoot.appendChild(markup);
+
+            // add event handling
+            this.addEventListener('click', this._clickHandler.bind(this));
+        }
+
+        connectedCallback() {
+            this.setAttribute('enhanced', '');
+        }
+
+        disconnectedCallback() {
+            console.log('dis connected');
+        }
+
+        attributeChangedCallback(attrName, oldVal, newVal) {
+            // trigger re-render if needed when attributes changed
+        }
+
+        get disabled() {
+            return this.hasAttribute('disabled');
+        }
+
+        set disabled(val) {
+            if(val) {
+                this.setAttribute('disabled', '');
+            } else {
+                this.removeAttribute('disabled');
+            }
+        }
+
+        _clickHandler() {
+            this.disabled = this.disabled ? '' : 'disabled';
+        }
+    };
+
+    // publish custom element
+    window.customElements.define('wc-button', WcButton);
+</script>

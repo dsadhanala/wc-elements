@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+        <title>Web component elements</title>
+        <link rel="stylesheet" href="assets/css/app-styles.css" media="screen">
+
+        <!-- polyfill -->
+        <script src="assets/js/libs/webcomponents-lite.js"></script>
+
+        <!-- W3C -->
+        <link rel="import" href="native/wc-button/">
+        <link rel="import" href="native/wc-input-with-binding/">
+
+        <!-- x-tag -->
+        <link rel="import" href="xtag/wc-input-with-binding/">
+
+        <!-- polymer -->
+        <link rel="import" href="polymer/wc-input-with-binding/">
+
+        <!-- page specific -->
+        <script defer src="assets/js/app-scripts.js"></script>
+    </head>
+    <body>
+        <h1>List of web components</h1>
+        <ul class="components-list">
+            <li>
+                <h3 title="w3c - v1">Slots example</h3>
+                <wc-button iconurl="/icon">
+                    <span slot="icon">&#10227;</span>
+                    <span slot="text">Refresh</span>
+                    <p>Simple custom button implementation with custom elements v1 and shadow dom v1</p>
+                </wc-button>
+            </li>
+            <li>
+                <h3 title="w3c - v1">Data binding example</h3>
+                <wc-input-with-binding greeting="Welcome!" user="Mr. X" />
+            </li>
+            <li>
+                <h3 title="xtag">Data binding example</h3>
+                <xtag-wc-input-with-binding greeting="Welcome!" user="Mr. X"></xtag-wc-input-with-binding>
+            </li>
+            <li>
+                <h3 title="polymer">Data binding example</h3>
+                <pwc-input-with-binding greeting="Welcome!" user="Mr. X"></pwc-input-with-binding>
+            </li>
+        </ul>
+    </body>
+</html>

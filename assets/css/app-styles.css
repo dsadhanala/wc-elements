@@ -1,0 +1,62 @@
+html {
+    font-size: 10px;
+}
+body {
+    font-family: 'Arial', 'Helvetica', sans-serif;
+    font-size: 1.3rem;
+    padding: 1rem 4rem;
+    margin: 0 auto;
+}
+
+h1 {
+    font-size: 2.4rem;
+    font-weight: lighter;
+    line-height: 1;
+    margin: 1rem 0;
+}
+
+.components-list {
+    counter-reset: li;
+}
+.components-list > li {
+    padding: 3rem 0 3rem 4rem;
+    margin: 0;
+    list-style: none;
+    border-bottom: 1px dotted #ddd;
+    position: relative;
+}
+.components-list > li::before {
+    counter-increment: li;
+    content: counter(li);
+    position: absolute;
+    left: 0;
+    top: 3rem;
+    background: #4daca6;
+    color: #fff;
+    border-radius: 100%;
+    padding: 0.5rem 1rem;
+}
+
+.components-list li > h3 {
+    margin: 0 0 1rem;
+    font-weight: normal;
+}
+
+.components-list li > h3::after {
+    display: inline-block;
+    content: attr(title);
+    margin-left: 1rem;
+    padding: 0.3rem 0.5rem;
+    background-color: #b8d8d6;
+    border-radius: 3px;
+    color: #527673;
+    opacity: 0.6;
+    font-size: 1.3rem;
+}
+
+/* desktop and above font size */
+@media only screen and (min-width: 64.0625em) {
+    html {
+        font-size: 12px;
+    }
+}

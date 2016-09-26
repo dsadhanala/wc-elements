@@ -1,0 +1,65 @@
+<link href="http://polygit.org/components/polymer/polymer.html" rel="import">
+
+<dom-module id="pwc-input-with-binding">
+    <style>
+        :host-context(.light) {}
+
+        :host {
+            opacity: 0;
+            transition: all 0.3s ease-in;
+            contain: content;
+        }
+
+        :host([enhanced]) {
+            opacity: 1;
+        }
+
+        input {
+            padding: 0.8rem 1rem;
+            font-size: 1.2rem;
+            border-radius: 0.2rem;
+            border: 1px solid #a6a6a6;
+            box-shadow: inset 1px 1px 1px rgba(0,0,0, 0.1);
+            min-width: 20rem;
+            transition: all 0.3s ease-in;
+        }
+
+        input:focus {
+            outline: 0;
+            border-color: #006666;
+        }
+
+        h4 {
+            margin: 0 0 0.5rem;
+        }
+    </style>
+
+    <template>
+        <h4>
+            <span id="greeting">[[greeting]]</span>
+            <span id="user">{{user}}</span>
+        </h4>
+        <input type="text" name="username" placeholder="Type here to change name" on-input="validateUser" id="userNameInp" value$=[[user]]>
+        <content></content>
+    </template>
+
+    <script>
+        Polymer({
+            is: 'pwc-input-with-binding',
+            properties: {
+                greeting: String,
+                user: {
+                    type: String,
+                    notify: true
+                }
+            },
+            ready: function() {
+                this.setAttribute('enhanced', '');
+                this.userOrgVal = this.user;
+            },
+            validateUser: function(e) {
+                this.user = e.target.value || this.userOrgVal;
+            }
+        });
+    </script>
+</dom-module>
