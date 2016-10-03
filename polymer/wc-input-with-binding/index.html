@@ -1,4 +1,4 @@
-<link href="http://polygit.org/components/polymer/polymer.html" rel="import">
+<link href="../../assets/polymer/polymer.html" rel="import">
 
 <dom-module id="pwc-input-with-binding">
     <style>
@@ -39,7 +39,7 @@
             <span id="greeting">[[greeting]]</span>
             <span id="user">{{user}}</span>
         </h4>
-        <input type="text" name="username" placeholder="Type here to change name" on-input="validateUser" id="userNameInp" value$=[[user]]>
+        <input type="text" name="username" placeholder="Type here to change name" on-input="validateUser" id="userNameInp">
         <content></content>
     </template>
 
@@ -54,8 +54,11 @@
                 }
             },
             ready: function() {
+                const userNameInp = this.querySelector('#userNameInp');
+
                 this.setAttribute('enhanced', '');
                 this.userOrgVal = this.user;
+                userNameInp.value = this.userOrgVal;
             },
             validateUser: function(e) {
                 this.user = e.target.value || this.userOrgVal;
